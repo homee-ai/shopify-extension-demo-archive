@@ -1,0 +1,88 @@
+{% capture 'meta_data' %}
+{% for variant in product.variants %}
+{{variant.id}}:{{ variant.id }}{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+{% endcapture %}
+{% assign avg_rating = block.settings.product.metafields.demo.avg_rating.value | round %}
+
+<span>{{ customer.id }}</span>
+<span>{{ shop.id }}</span>
+<span id="id-viewer">{{ product.selected_or_first_available_variant.id }}</span>
+{% if avg_rating >= 4 %}
+  <br>
+  <img src="{{ "thumbs-up.png" | asset_img_url: '15x' }}" height="15" width="15" loading="lazy">
+  {{ 'ratings.home.recommendationText' | t }}
+{% endif %}
+<br>
+<iframe id="unity-iframe" src="https://stg-homee-service-public.s3.amazonaws.com/unity_build/index.html" title="unity" width="800" height="500"></iframe>
+
+<script>
+  function extractQueryParam(url, paramName) {
+    const parsedUrl = new URL(url);
+    const queryParams = parsedUrl.searchParams;
+    if (queryParams.has(paramName)) {
+      return queryParams.get(paramName);
+    } else {
+      return null;
+    }
+  }
+  console.log("ID: ");
+  console.log({{ shop.id }});
+  console.log({{ customer.id }});
+
+  // fetch(`/apps/products/0392fe9e-e323-4f0c-8352-77352f4d8afb`).then((response) => {
+  //
+  //   return response; 
+  // }).then((data) => {
+  // 	console.log(data);
+  // }).catch((err) => {
+  // console.log('Error:', err);
+  // });
+  
+  let variantId = {{ product.selected_or_first_available_variant.id }};
+  let previousUrl = '';
+  const observer = new MutationObserver(function(mutations) {
+    if (window.location.href !== previousUrl) {
+        previousUrl = window.location.href;
+        // console.log(`URL changed from ${previousUrl} to ${window.location.href}`);
+        variantId = extractQueryParam(window.location.href, "variant");
+        console.log(variantId);
+        if (variantId){
+          const iframe = document.getElementById("unity-iframe");
+          iframe.contentWindow.postMessage(variantId, "*");
+          const span = document.getElementById("id-viewer");
+          span.textContent = variantId;
+          // const currentURLObject = new URL(iframe.src);
+          // currentURLObject.searchParams.set('variant', variantId);
+          // const newURL = currentURLObject.toString();
+          // iframe.src = newURL;
+        }
+      }
+  });
+  const config = {subtree: true, childList: true};
+
+  // start listening to changes
+  observer.observe(document, config);
+  const iframe = document.getElementById("unity-iframe");
+  iframe.contentWindow.postMessage(variantId, "*");
+  const metaData = { {{ meta_data }} };
+  const span = document.getElementById("id-viewer");
+  span.textContent = variantId;
+
+  console.log(metaData);
+  console.log(variantId);
+  
+</script> 
+
+
+{% schema %}
+{
+  "name": "Star Rating",
+  "target": "section",
+  "settings": [
+    { "type": "product", "id": "product", "label": "product", "autofill": true },
+    { "type": "color", "id": "colour", "label": "Star Colour", "default": "#ff0000" }
+  ]
+}
+{% endschema %}
+

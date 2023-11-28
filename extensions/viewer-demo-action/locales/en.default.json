@@ -1,0 +1,4 @@
+{
+  "name": "viewer-demo-action",
+  "welcome": "Welcome to the {{target}} extension!"
+}

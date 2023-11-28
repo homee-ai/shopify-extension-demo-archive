@@ -1,0 +1,28 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "viewer-demo-app"
+client_id = "53dd47f3ef7586156495ee10671b853b"
+application_url = "https://passport-latina-skills-testimonials.trycloudflare.com"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://passport-latina-skills-testimonials.trycloudflare.com/auth/callback",
+  "https://passport-latina-skills-testimonials.trycloudflare.com/auth/shopify/callback",
+  "https://passport-latina-skills-testimonials.trycloudflare.com/api/auth/callback",
+  "https://passport-latina-skills-testimonials.trycloudflare.com/.shopify/graphiql/auth/callback"
+]
+
+[webhooks]
+api_version = "2023-10"
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "quickstart-ae8a5831.myshopify.com"

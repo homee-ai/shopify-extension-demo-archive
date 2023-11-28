@@ -1,0 +1,4 @@
+{
+  "name": "viewer-demo-block",
+  "welcome": "Bienvenue dans l'extension {{target}}!"
+}
